@@ -1,58 +1,3911 @@
 {
-    "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://json-schema.org/draft/2020-12/schema",
-    "$vocabulary": {
-        "https://json-schema.org/draft/2020-12/vocab/core": true,
-        "https://json-schema.org/draft/2020-12/vocab/applicator": true,
-        "https://json-schema.org/draft/2020-12/vocab/unevaluated": true,
-        "https://json-schema.org/draft/2020-12/vocab/validation": true,
-        "https://json-schema.org/draft/2020-12/vocab/meta-data": true,
-        "https://json-schema.org/draft/2020-12/vocab/format-annotation": true,
-        "https://json-schema.org/draft/2020-12/vocab/content": true
-    },
-    "$dynamicAnchor": "meta",
-
-    "title": "Core and Validation specifications meta-schema",
-    "allOf": [
-        {"$ref": "meta/core"},
-        {"$ref": "meta/applicator"},
-        {"$ref": "meta/unevaluated"},
-        {"$ref": "meta/validation"},
-        {"$ref": "meta/meta-data"},
-        {"$ref": "meta/format-annotation"},
-        {"$ref": "meta/content"}
-    ],
-    "type": ["object", "boolean"],
-    "$comment": "This meta-schema also defines keywords that have appeared in previous drafts in order to prevent incompatible extensions as they remain in common use.",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "CTF",
+    "type": "object",
+    "additionalProperties": false,
     "properties": {
-        "definitions": {
-            "$comment": "\"definitions\" has been replaced by \"$defs\".",
-            "type": "object",
-            "additionalProperties": { "$dynamicRef": "#meta" },
-            "deprecated": true,
-            "default": {}
+        "type": {
+            "type": "string",
+            "enum": [
+                "CTF"
+            ],
+            "default": "CTF"
         },
-        "dependencies": {
-            "$comment": "\"dependencies\" has been split and replaced by \"dependentSchemas\" and \"dependentRequired\" in order to serve their differing semantics.",
+        "id": {
+            "type": "string",
+            "format": "uuid"
+        },
+        "name": {
+            "type": "string"
+        },
+        "description": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "whiteTeamLdapGroup": {
+            "type": "string"
+        },
+        "campaignPhases": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/CampaignPhase"
+            }
+        },
+        "networkSegments": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/NetworkSegment"
+            }
+        },
+        "blueTeams": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/CTFBlueTeam"
+            }
+        },
+        "taskCategories": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/CTFTaskCategory"
+            }
+        },
+        "activeTimes": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/ActiveTime"
+            }
+        },
+        "definition": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "oneOf": [
+                        {
+                            "$ref": "#/definitions/ExerciseDefinition"
+                        },
+                        {
+                            "$ref": "#/definitions/CTFExerciseDefinition"
+                        },
+                        {
+                            "$ref": "#/definitions/HybridExerciseDefinition"
+                        },
+                        {
+                            "$ref": "#/definitions/UnpublishedExerciseDefinition"
+                        },
+                        {
+                            "$ref": "#/definitions/VersusExerciseDefinition"
+                        }
+                    ]
+                }
+            ]
+        },
+        "externalId": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "externalSource": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "type": "string",
+                    "enum": [
+                        "VLM",
+                        "OTHER"
+                    ]
+                }
+            ]
+        },
+        "durationPeriod": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "taskAbandonPenalty": {
+            "type": "number"
+        },
+        "invalidFlagPenalty": {
+            "type": "number"
+        },
+        "openedTasksLimit": {
+            "type": "integer"
+        },
+        "isIndividualAssessment": {
+            "type": "boolean"
+        },
+        "individualAssessmentIdlePeriod": {
+            "type": "string"
+        },
+        "isNiceFrameworkSupported": {
+            "type": "boolean"
+        },
+        "missionDurationPeriod": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "gitConfiguration": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "oneOf": [
+                        {
+                            "$ref": "#/definitions/GitCredentialsConfiguration"
+                        },
+                        {
+                            "$ref": "#/definitions/GitSshConfiguration"
+                        }
+                    ]
+                }
+            ]
+        },
+        "workRoleId": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "showTeamPosition": {
+            "type": "boolean"
+        },
+        "isTargetManagementEnabled": {
+            "type": "boolean"
+        },
+        "difficulty": {
+            "type": "string",
+            "enum": [
+                "EASY",
+                "MEDIUM",
+                "HARD"
+            ]
+        },
+        "imageId": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        },
+        "isTeamSettingsEnabled": {
+            "type": "boolean"
+        },
+        "maxSpecialScore": {
+            "type": "integer"
+        },
+        "showMissionBoardConsole": {
+            "type": "boolean"
+        },
+        "pointsBudget": {
+            "$ref": "#/definitions/ExercisePointsBudget"
+        },
+        "isSlotResetEnabled": {
+            "type": "boolean"
+        },
+        "scheduledStartTime": {
+            "oneOf": [
+                {
+                    "type": "null",
+                    "title": "Not included"
+                },
+                {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            ]
+        }
+    },
+    "required": [
+        "type",
+        "id",
+        "name",
+        "whiteTeamLdapGroup",
+        "campaignPhases",
+        "networkSegments",
+        "blueTeams",
+        "taskCategories",
+        "activeTimes",
+        "taskAbandonPenalty",
+        "invalidFlagPenalty",
+        "openedTasksLimit",
+        "isIndividualAssessment",
+        "individualAssessmentIdlePeriod",
+        "isNiceFrameworkSupported",
+        "showTeamPosition",
+        "isTargetManagementEnabled",
+        "difficulty",
+        "isTeamSettingsEnabled",
+        "maxSpecialScore",
+        "showMissionBoardConsole",
+        "pointsBudget",
+        "isSlotResetEnabled"
+    ],
+    "definitions": {
+        "CampaignPhase": {
             "type": "object",
-            "additionalProperties": {
-                "anyOf": [
-                    { "$dynamicRef": "#meta" },
-                    { "$ref": "meta/validation#/$defs/stringArray" }
-                ]
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "startTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
             },
-            "deprecated": true,
-            "default": {}
+            "required": [
+                "id",
+                "name",
+                "startTime"
+            ]
         },
-        "$recursiveAnchor": {
-            "$comment": "\"$recursiveAnchor\" has been replaced by \"$dynamicAnchor\".",
-            "$ref": "meta/core#/$defs/anchorString",
-            "deprecated": true
+        "NetworkSegment": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "colorHex": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "description"
+            ]
         },
-        "$recursiveRef": {
-            "$comment": "\"$recursiveRef\" has been replaced by \"$dynamicRef\".",
-            "$ref": "meta/core#/$defs/uriReferenceString",
-            "deprecated": true
+        "CTFBlueTeam": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "ldapGroup": {
+                    "type": "string"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/definitions/CTFTask"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFGmaValidationTask"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFFreeFormTask"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFVersusTask"
+                            }
+                        ]
+                    }
+                },
+                "avatarFileId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "gmaId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    ]
+                },
+                "customName": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "ldapGroup",
+                "tasks",
+                "customName"
+            ]
+        },
+        "CTFTask": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "SINGLE_ANSWER"
+                    ],
+                    "default": "SINGLE_ANSWER"
+                },
+                "definitionId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFHint"
+                    }
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Target"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "requiredTaskIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "niceIds": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/NiceIds"
+                        }
+                    ]
+                },
+                "mitreTags": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/MitreTags"
+                        }
+                    ]
+                },
+                "answer": {
+                    "type": "string"
+                }
+            },
+            "title": "SINGLE_ANSWER",
+            "required": [
+                "type",
+                "definitionId",
+                "title",
+                "question",
+                "description",
+                "hints",
+                "targets",
+                "score",
+                "category",
+                "requiredTaskIds",
+                "isLocked",
+                "answer"
+            ]
+        },
+        "CTFHint": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "penalty": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "id",
+                "content",
+                "penalty"
+            ]
+        },
+        "Target": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "networkSegmentId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "targetChecks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetCheck"
+                    }
+                },
+                "isDeployed": {
+                    "type": "boolean"
+                },
+                "scoreBreakdown": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ScoreBreakdown"
+                    }
+                },
+                "flagFileUnixPath": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "flagFileWinPath": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "username": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "password": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "supportConsole": {
+                    "type": "boolean"
+                },
+                "supportFlagPlanting": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "hostname",
+                "networkSegmentId",
+                "targetChecks",
+                "isDeployed",
+                "scoreBreakdown",
+                "supportConsole",
+                "supportFlagPlanting"
+            ]
+        },
+        "TargetCheck": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "ICMP_RESPONDER_PING",
+                        "TCP_RESPONDER_SOCKET",
+                        "EXTERNAL_SCRIPT"
+                    ]
+                },
+                "ipAddress": {
+                    "type": "string"
+                },
+                "parameters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetCheckParameter"
+                    }
+                },
+                "scoreWeight": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "objectives": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Objective"
+                    }
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "type",
+                "ipAddress",
+                "parameters",
+                "scoreWeight",
+                "username",
+                "objectives"
+            ]
+        },
+        "TargetCheckParameter": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "value"
+            ]
+        },
+        "Objective": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string",
+                    "enum": [
+                        "NETWORKING",
+                        "CLIENT_SIDE",
+                        "WEB"
+                    ]
+                },
+                "campaignPhaseId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "scoreWeight": {
+                    "type": "integer"
+                },
+                "sequence": {
+                    "type": "integer"
+                },
+                "mitreTags": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/MitreTags"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "id",
+                "name",
+                "category",
+                "campaignPhaseId",
+                "scoreWeight",
+                "sequence"
+            ]
+        },
+        "MitreTags": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "tags"
+            ]
+        },
+        "ScoreBreakdown": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "enum": [
+                        "TOTAL",
+                        "SPECIAL",
+                        "ATTACK_REPORTS",
+                        "AVAILABILITY",
+                        "INCIDENT_REPORTS",
+                        "SITUATION_REPORTS",
+                        "RESTORE_FROM_BACKUP",
+                        "USE_HINT",
+                        "ABANDON_TASK",
+                        "SOLVE_TASK",
+                        "ATTACK_VERSUS",
+                        "DEFEND_VERSUS",
+                        "ABANDON_ATTACK",
+                        "INVALID_FLAG"
+                    ]
+                },
+                "value": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "name",
+                "value"
+            ]
+        },
+        "NiceIds": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "taskIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "knowledgeIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "skillIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "abilityIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "taskIds",
+                "knowledgeIds",
+                "skillIds",
+                "abilityIds"
+            ]
+        },
+        "CTFGmaValidationTask": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "GMA_VALIDATION"
+                    ],
+                    "default": "GMA_VALIDATION"
+                },
+                "definitionId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFHint"
+                    }
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Target"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "requiredTaskIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "niceIds": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/NiceIds"
+                        }
+                    ]
+                },
+                "mitreTags": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/MitreTags"
+                        }
+                    ]
+                },
+                "scripts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ScriptConfiguration"
+                    }
+                },
+                "isInputRequired": {
+                    "type": "boolean"
+                }
+            },
+            "title": "GMA_VALIDATION",
+            "required": [
+                "type",
+                "definitionId",
+                "title",
+                "question",
+                "description",
+                "hints",
+                "targets",
+                "score",
+                "category",
+                "requiredTaskIds",
+                "isLocked",
+                "scripts",
+                "isInputRequired"
+            ]
+        },
+        "ScriptConfiguration": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "script": {
+                    "type": "string"
+                },
+                "args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "script",
+                "args"
+            ]
+        },
+        "CTFFreeFormTask": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "FREE_FORM"
+                    ],
+                    "default": "FREE_FORM"
+                },
+                "definitionId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFHint"
+                    }
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Target"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "requiredTaskIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "niceIds": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/NiceIds"
+                        }
+                    ]
+                },
+                "mitreTags": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/MitreTags"
+                        }
+                    ]
+                },
+                "isAutoApproved": {
+                    "type": "boolean"
+                },
+                "autoApprovedDelayPeriod": {
+                    "type": "string"
+                }
+            },
+            "title": "FREE_FORM",
+            "required": [
+                "type",
+                "definitionId",
+                "title",
+                "question",
+                "description",
+                "hints",
+                "targets",
+                "score",
+                "category",
+                "requiredTaskIds",
+                "isLocked",
+                "isAutoApproved",
+                "autoApprovedDelayPeriod"
+            ]
+        },
+        "CTFVersusTask": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "VERSUS"
+                    ],
+                    "default": "VERSUS"
+                },
+                "definitionId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFHint"
+                    }
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Target"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "requiredTaskIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "niceIds": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/NiceIds"
+                        }
+                    ]
+                },
+                "mitreTags": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/MitreTags"
+                        }
+                    ]
+                },
+                "flagFileNamePattern": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "flagContentPattern": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "advancedScorePattern": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "string"
+                },
+                "attackAbandonPenalty": {
+                    "type": "number"
+                },
+                "defenseReward": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "successfulAttackLimitPerTeam": {
+                    "type": "integer"
+                },
+                "successfulAttackCoolDownPeriod": {
+                    "type": "string"
+                }
+            },
+            "title": "VERSUS",
+            "required": [
+                "type",
+                "definitionId",
+                "title",
+                "question",
+                "description",
+                "hints",
+                "targets",
+                "score",
+                "category",
+                "requiredTaskIds",
+                "isLocked",
+                "advancedScorePattern",
+                "duration",
+                "attackAbandonPenalty",
+                "successfulAttackLimitPerTeam",
+                "successfulAttackCoolDownPeriod"
+            ]
+        },
+        "CTFTaskCategory": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "icon": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "code",
+                "name"
+            ]
+        },
+        "ActiveTime": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "startTime": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "endTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": [
+                "startTime",
+                "endTime"
+            ]
+        },
+        "ExerciseDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "CAMPAIGN"
+                    ],
+                    "default": "CAMPAIGN"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "blueTeamName": {
+                    "type": "string"
+                },
+                "networkSegments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/NetworkSegmentDefinition"
+                    }
+                },
+                "redTeamLdapGroup": {
+                    "type": "string"
+                },
+                "whiteTeamLdapGroup": {
+                    "type": "string"
+                },
+                "blueTeamLdapGroup": {
+                    "type": "string"
+                },
+                "gmaId": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "campaignPhases": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CampaignPhaseDefinition"
+                    }
+                },
+                "numberOfTeams": {
+                    "type": "integer"
+                },
+                "gracePeriodInMinutes": {
+                    "type": "integer"
+                },
+                "targetGroups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetGroupDefinition"
+                    }
+                },
+                "pointsBudget": {
+                    "$ref": "#/definitions/ExercisePointsBudget"
+                },
+                "activeTimes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ActiveTime"
+                    }
+                },
+                "expectedSituationReportsCount": {
+                    "type": "integer"
+                },
+                "attackFlagFileUnixPaths": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "attackFlagFileWinPaths": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "scoringBotUsername": {
+                    "type": "string"
+                },
+                "scoringBotPassword": {
+                    "type": "string"
+                },
+                "gitConfiguration": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/definitions/GitCredentialsConfiguration"
+                                },
+                                {
+                                    "$ref": "#/definitions/GitSshConfiguration"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "isTargetCheckStatusHidden": {
+                    "type": "boolean"
+                },
+                "isTeamSettingsEnabled": {
+                    "type": "boolean"
+                },
+                "situationReportTemplate": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "incidentReportTemplate": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "disabledIncidentTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "ONLINE",
+                            "OFFLINE",
+                            "COMPROMISED",
+                            "NOT_COMPROMISED"
+                        ]
+                    }
+                },
+                "isTargetManagementEnabled": {
+                    "type": "boolean"
+                },
+                "difficulty": {
+                    "type": "string",
+                    "enum": [
+                        "EASY",
+                        "MEDIUM",
+                        "HARD"
+                    ]
+                },
+                "image": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "imageId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "maxSpecialScore": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "isSlotResetEnabled": {
+                    "type": "boolean"
+                },
+                "scheduledStartTime": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    ]
+                },
+                "externalId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "externalSource": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "enum": [
+                                "VLM",
+                                "OTHER"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "title": "CAMPAIGN",
+            "required": [
+                "type",
+                "name",
+                "blueTeamName",
+                "networkSegments",
+                "redTeamLdapGroup",
+                "whiteTeamLdapGroup",
+                "blueTeamLdapGroup",
+                "gmaId",
+                "campaignPhases",
+                "numberOfTeams",
+                "gracePeriodInMinutes",
+                "targetGroups",
+                "pointsBudget",
+                "activeTimes",
+                "expectedSituationReportsCount",
+                "attackFlagFileUnixPaths",
+                "attackFlagFileWinPaths",
+                "scoringBotUsername",
+                "scoringBotPassword",
+                "isTargetCheckStatusHidden",
+                "isTeamSettingsEnabled",
+                "disabledIncidentTypes",
+                "isTargetManagementEnabled",
+                "difficulty",
+                "isSlotResetEnabled"
+            ]
+        },
+        "NetworkSegmentDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "colorHex": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "name",
+                "description"
+            ]
+        },
+        "CampaignPhaseDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "startTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            },
+            "required": [
+                "name",
+                "startTime"
+            ]
+        },
+        "TargetGroupDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "objectives": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ObjectiveDefinition"
+                    }
+                },
+                "targets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetDefinition"
+                    }
+                }
+            },
+            "required": [
+                "name",
+                "username",
+                "objectives",
+                "targets"
+            ]
+        },
+        "ObjectiveDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "string",
+                    "enum": [
+                        "NETWORKING",
+                        "CLIENT_SIDE",
+                        "WEB"
+                    ]
+                },
+                "campaignPhaseName": {
+                    "type": "string"
+                },
+                "scoreWeight": {
+                    "type": "integer"
+                },
+                "sequence": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "name",
+                "category",
+                "campaignPhaseName",
+                "scoreWeight",
+                "sequence"
+            ]
+        },
+        "TargetDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "hostname": {
+                    "type": "string"
+                },
+                "networkSegmentName": {
+                    "type": "string"
+                },
+                "targetChecks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetCheckDefinition"
+                    }
+                },
+                "scoreBreakdown": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ScoreBreakdown"
+                    }
+                },
+                "flagFileUnixPath": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "flagFileWinPath": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "username": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "password": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "supportConsole": {
+                    "type": "boolean"
+                },
+                "supportFlagPlanting": {
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "name",
+                "hostname",
+                "networkSegmentName",
+                "targetChecks",
+                "scoreBreakdown",
+                "supportConsole",
+                "supportFlagPlanting"
+            ]
+        },
+        "TargetCheckDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "ICMP_RESPONDER_PING",
+                        "TCP_RESPONDER_SOCKET",
+                        "EXTERNAL_SCRIPT"
+                    ]
+                },
+                "ipAddress": {
+                    "type": "string"
+                },
+                "parameters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetCheckParameter"
+                    }
+                },
+                "scoreWeight": {
+                    "type": "integer"
+                },
+                "objectives": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ObjectiveDefinition"
+                    }
+                },
+                "username": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "type",
+                "ipAddress",
+                "parameters",
+                "scoreWeight",
+                "objectives",
+                "username"
+            ]
+        },
+        "ExercisePointsBudget": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "total": {
+                    "type": "integer"
+                },
+                "breakdown": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ScoreBreakdown"
+                    }
+                }
+            },
+            "required": [
+                "total",
+                "breakdown"
+            ]
+        },
+        "GitCredentialsConfiguration": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "authenticationType": {
+                    "type": "string",
+                    "enum": [
+                        "CREDENTIALS"
+                    ],
+                    "default": "CREDENTIALS"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "branch": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "title": "CREDENTIALS",
+            "required": [
+                "authenticationType",
+                "url",
+                "branch",
+                "username",
+                "password"
+            ]
+        },
+        "GitSshConfiguration": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "authenticationType": {
+                    "type": "string",
+                    "enum": [
+                        "SSH"
+                    ],
+                    "default": "SSH"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "branch": {
+                    "type": "string"
+                },
+                "sshKey": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "title": "SSH",
+            "required": [
+                "authenticationType",
+                "url",
+                "branch",
+                "sshKey"
+            ]
+        },
+        "CTFExerciseDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "CTF"
+                    ],
+                    "default": "CTF"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "blueTeamName": {
+                    "type": "string"
+                },
+                "blueTeamLdapGroup": {
+                    "type": "string"
+                },
+                "whiteTeamLdapGroup": {
+                    "type": "string"
+                },
+                "numberOfTeams": {
+                    "type": "integer"
+                },
+                "campaignPhases": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CampaignPhaseDefinition"
+                    }
+                },
+                "networkSegments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/NetworkSegmentDefinition"
+                    }
+                },
+                "targetGroups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetGroupDefinition"
+                    }
+                },
+                "activeTimes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ActiveTime"
+                    }
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/definitions/CTFTaskDefinition"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFGmaValidationTaskDefinition"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFFreeFormTaskDefinition"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFVersusTaskDefinition"
+                            }
+                        ]
+                    }
+                },
+                "durationPeriod": {
+                    "type": "string"
+                },
+                "taskAbandonPenalty": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "openedTasksLimit": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "gmaId": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "isIndividualAssessment": {
+                    "type": "boolean"
+                },
+                "individualAssessmentIdlePeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "isNiceFrameworkSupported": {
+                    "type": "boolean"
+                },
+                "missionDurationPeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "taskCategories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFTaskCategory"
+                    }
+                },
+                "gitConfiguration": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/definitions/GitCredentialsConfiguration"
+                                },
+                                {
+                                    "$ref": "#/definitions/GitSshConfiguration"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "workRoleId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "showTeamPosition": {
+                    "type": "boolean"
+                },
+                "isTargetManagementEnabled": {
+                    "type": "boolean"
+                },
+                "difficulty": {
+                    "type": "string",
+                    "enum": [
+                        "EASY",
+                        "MEDIUM",
+                        "HARD"
+                    ]
+                },
+                "image": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "imageId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "isTeamSettingsEnabled": {
+                    "type": "boolean"
+                },
+                "maxSpecialScore": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "showMissionBoardConsole": {
+                    "type": "boolean"
+                },
+                "pointsBudget": {
+                    "$ref": "#/definitions/ExercisePointsBudget"
+                },
+                "isSlotResetEnabled": {
+                    "type": "boolean"
+                },
+                "scheduledStartTime": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    ]
+                },
+                "externalId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "externalSource": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "enum": [
+                                "VLM",
+                                "OTHER"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "title": "CTF",
+            "required": [
+                "type",
+                "name",
+                "blueTeamName",
+                "blueTeamLdapGroup",
+                "whiteTeamLdapGroup",
+                "numberOfTeams",
+                "campaignPhases",
+                "networkSegments",
+                "targetGroups",
+                "activeTimes",
+                "tasks",
+                "durationPeriod",
+                "gmaId",
+                "isIndividualAssessment",
+                "isNiceFrameworkSupported",
+                "taskCategories",
+                "showTeamPosition",
+                "isTargetManagementEnabled",
+                "difficulty",
+                "isTeamSettingsEnabled",
+                "showMissionBoardConsole",
+                "pointsBudget",
+                "isSlotResetEnabled"
+            ]
+        },
+        "CTFTaskDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "SINGLE_ANSWER"
+                    ],
+                    "default": "SINGLE_ANSWER"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFHintDefinition"
+                    }
+                },
+                "targetNamePatterns": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "requiredTaskIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "niceIds": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/NiceIds"
+                        }
+                    ]
+                },
+                "mitreTags": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/MitreTags"
+                        }
+                    ]
+                },
+                "answer": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "title": "SINGLE_ANSWER",
+            "required": [
+                "type",
+                "id",
+                "title",
+                "question",
+                "description",
+                "hints",
+                "targetNamePatterns",
+                "score",
+                "category",
+                "requiredTaskIds",
+                "isLocked",
+                "answer"
+            ]
+        },
+        "CTFHintDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "penalty": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "content",
+                "penalty"
+            ]
+        },
+        "CTFGmaValidationTaskDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "GMA_VALIDATION"
+                    ],
+                    "default": "GMA_VALIDATION"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFHintDefinition"
+                    }
+                },
+                "targetNamePatterns": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "requiredTaskIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "niceIds": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/NiceIds"
+                        }
+                    ]
+                },
+                "mitreTags": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/MitreTags"
+                        }
+                    ]
+                },
+                "scripts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ScriptConfiguration"
+                    }
+                },
+                "isInputRequired": {
+                    "type": "boolean"
+                }
+            },
+            "title": "GMA_VALIDATION",
+            "required": [
+                "type",
+                "id",
+                "title",
+                "question",
+                "description",
+                "hints",
+                "targetNamePatterns",
+                "score",
+                "category",
+                "requiredTaskIds",
+                "isLocked",
+                "scripts",
+                "isInputRequired"
+            ]
+        },
+        "CTFFreeFormTaskDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "FREE_FORM"
+                    ],
+                    "default": "FREE_FORM"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFHintDefinition"
+                    }
+                },
+                "targetNamePatterns": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "requiredTaskIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "niceIds": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/NiceIds"
+                        }
+                    ]
+                },
+                "mitreTags": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/MitreTags"
+                        }
+                    ]
+                },
+                "autoApprovedDelayPeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            "title": "FREE_FORM",
+            "required": [
+                "type",
+                "id",
+                "title",
+                "question",
+                "description",
+                "hints",
+                "targetNamePatterns",
+                "score",
+                "category",
+                "requiredTaskIds",
+                "isLocked"
+            ]
+        },
+        "CTFVersusTaskDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "VERSUS"
+                    ],
+                    "default": "VERSUS"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "question": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "hints": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFHintDefinition"
+                    }
+                },
+                "targetNamePatterns": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "score": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "requiredTaskIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "isLocked": {
+                    "type": "boolean"
+                },
+                "niceIds": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/NiceIds"
+                        }
+                    ]
+                },
+                "mitreTags": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/MitreTags"
+                        }
+                    ]
+                },
+                "advancedScorePattern": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "duration": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "flagFileNamePattern": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "flagContentPattern": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "attackAbandonPenalty": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "defenseReward": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "successfulAttackLimitPerTeam": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                }
+            },
+            "title": "VERSUS",
+            "required": [
+                "type",
+                "id",
+                "title",
+                "question",
+                "description",
+                "hints",
+                "targetNamePatterns",
+                "score",
+                "category",
+                "requiredTaskIds",
+                "isLocked"
+            ]
+        },
+        "HybridExerciseDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "HYBRID"
+                    ],
+                    "default": "HYBRID"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "numberOfTeams": {
+                    "type": "integer"
+                },
+                "blueTeamName": {
+                    "type": "string"
+                },
+                "blueTeamLdapGroup": {
+                    "type": "string"
+                },
+                "whiteTeamLdapGroup": {
+                    "type": "string"
+                },
+                "campaignPhases": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CampaignPhaseDefinition"
+                    }
+                },
+                "targetGroups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetGroupDefinition"
+                    }
+                },
+                "networkSegments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/NetworkSegmentDefinition"
+                    }
+                },
+                "activeTimes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ActiveTime"
+                    }
+                },
+                "gmaId": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "gitConfiguration": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/definitions/GitCredentialsConfiguration"
+                                },
+                                {
+                                    "$ref": "#/definitions/GitSshConfiguration"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "externalId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "externalSource": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "enum": [
+                                "VLM",
+                                "OTHER"
+                            ]
+                        }
+                    ]
+                },
+                "isTargetManagementEnabled": {
+                    "type": "boolean"
+                },
+                "difficulty": {
+                    "type": "string",
+                    "enum": [
+                        "EASY",
+                        "MEDIUM",
+                        "HARD"
+                    ]
+                },
+                "image": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "imageId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "isTeamSettingsEnabled": {
+                    "type": "boolean"
+                },
+                "maxSpecialScore": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "pointsBudget": {
+                    "$ref": "#/definitions/ExercisePointsBudget"
+                },
+                "isSlotResetEnabled": {
+                    "type": "boolean"
+                },
+                "scheduledStartTime": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    ]
+                },
+                "redTeamLdapGroup": {
+                    "type": "string"
+                },
+                "gracePeriodInMinutes": {
+                    "type": "integer"
+                },
+                "expectedSituationReportsCount": {
+                    "type": "integer"
+                },
+                "attackFlagFileUnixPaths": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "attackFlagFileWinPaths": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "scoringBotUsername": {
+                    "type": "string"
+                },
+                "scoringBotPassword": {
+                    "type": "string"
+                },
+                "isTargetCheckStatusHidden": {
+                    "type": "boolean"
+                },
+                "situationReportTemplate": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "incidentReportTemplate": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "disabledIncidentTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "ONLINE",
+                            "OFFLINE",
+                            "COMPROMISED",
+                            "NOT_COMPROMISED"
+                        ]
+                    }
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/definitions/CTFTaskDefinition"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFGmaValidationTaskDefinition"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFFreeFormTaskDefinition"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFVersusTaskDefinition"
+                            }
+                        ]
+                    }
+                },
+                "durationPeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "taskAbandonPenalty": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "openedTasksLimit": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "isIndividualAssessment": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "individualAssessmentIdlePeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "isNiceFrameworkSupported": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "missionDurationPeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "taskCategories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFTaskCategory"
+                    }
+                },
+                "workRoleId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "showTeamPosition": {
+                    "type": "boolean"
+                },
+                "showMissionBoardConsole": {
+                    "type": "boolean"
+                }
+            },
+            "title": "HYBRID",
+            "required": [
+                "type",
+                "name",
+                "numberOfTeams",
+                "blueTeamName",
+                "blueTeamLdapGroup",
+                "whiteTeamLdapGroup",
+                "campaignPhases",
+                "targetGroups",
+                "networkSegments",
+                "activeTimes",
+                "gmaId",
+                "isTargetManagementEnabled",
+                "difficulty",
+                "isTeamSettingsEnabled",
+                "pointsBudget",
+                "isSlotResetEnabled",
+                "redTeamLdapGroup",
+                "gracePeriodInMinutes",
+                "expectedSituationReportsCount",
+                "attackFlagFileUnixPaths",
+                "attackFlagFileWinPaths",
+                "scoringBotUsername",
+                "scoringBotPassword",
+                "isTargetCheckStatusHidden",
+                "disabledIncidentTypes",
+                "tasks",
+                "taskCategories",
+                "showTeamPosition",
+                "showMissionBoardConsole"
+            ]
+        },
+        "UnpublishedExerciseDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "UNPUBLISHED"
+                    ],
+                    "default": "UNPUBLISHED"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "numberOfTeams": {
+                    "type": "integer"
+                },
+                "blueTeamName": {
+                    "type": "string"
+                },
+                "whiteTeamLdapGroup": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "externalId": {
+                    "type": "string"
+                },
+                "externalSource": {
+                    "type": "string",
+                    "enum": [
+                        "VLM",
+                        "OTHER"
+                    ]
+                },
+                "campaignPhases": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CampaignPhaseDefinition"
+                    }
+                },
+                "targetGroups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetGroupDefinition"
+                    }
+                },
+                "networkSegments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/NetworkSegmentDefinition"
+                    }
+                },
+                "activeTimes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ActiveTime"
+                    }
+                },
+                "gmaId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "format": "uuid"
+                            }
+                        }
+                    ]
+                },
+                "gitConfiguration": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/definitions/GitCredentialsConfiguration"
+                                },
+                                {
+                                    "$ref": "#/definitions/GitSshConfiguration"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "isTargetManagementEnabled": {
+                    "type": "boolean"
+                },
+                "difficulty": {
+                    "type": "string",
+                    "enum": [
+                        "EASY",
+                        "MEDIUM",
+                        "HARD"
+                    ]
+                },
+                "image": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "imageId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "isTeamSettingsEnabled": {
+                    "type": "boolean"
+                },
+                "maxSpecialScore": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "isSlotResetEnabled": {
+                    "type": "boolean"
+                },
+                "scheduledStartTime": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    ]
+                },
+                "redTeamLdapGroup": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "blueTeamLdapGroup": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "gracePeriodInMinutes": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "pointsBudget": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "$ref": "#/definitions/ExercisePointsBudget"
+                        }
+                    ]
+                },
+                "expectedSituationReportsCount": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "attackFlagFileUnixPaths": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                "attackFlagFileWinPaths": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    ]
+                },
+                "scoringBotUsername": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "scoringBotPassword": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "isTargetCheckStatusHidden": {
+                    "type": "boolean"
+                },
+                "situationReportTemplate": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "incidentReportTemplate": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "disabledIncidentTypes": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "ONLINE",
+                                    "OFFLINE",
+                                    "COMPROMISED",
+                                    "NOT_COMPROMISED"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "tasks": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "oneOf": [
+                                    {
+                                        "$ref": "#/definitions/CTFTaskDefinition"
+                                    },
+                                    {
+                                        "$ref": "#/definitions/CTFGmaValidationTaskDefinition"
+                                    },
+                                    {
+                                        "$ref": "#/definitions/CTFFreeFormTaskDefinition"
+                                    },
+                                    {
+                                        "$ref": "#/definitions/CTFVersusTaskDefinition"
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "durationPeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "taskAbandonPenalty": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "openedTasksLimit": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "isIndividualAssessment": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "individualAssessmentIdlePeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "isNiceFrameworkSupported": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "missionDurationPeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "taskCategories": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CTFTaskCategory"
+                            }
+                        }
+                    ]
+                },
+                "workRoleId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "showTeamPosition": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "showMissionBoardConsole": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                }
+            },
+            "title": "UNPUBLISHED",
+            "required": [
+                "type",
+                "name",
+                "numberOfTeams",
+                "blueTeamName",
+                "externalId",
+                "externalSource",
+                "campaignPhases",
+                "targetGroups",
+                "networkSegments",
+                "activeTimes",
+                "isTargetManagementEnabled",
+                "difficulty",
+                "isTeamSettingsEnabled",
+                "isSlotResetEnabled",
+                "isTargetCheckStatusHidden"
+            ]
+        },
+        "VersusExerciseDefinition": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "VERSUS"
+                    ],
+                    "default": "VERSUS"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "numberOfTeams": {
+                    "type": "integer"
+                },
+                "blueTeamName": {
+                    "type": "string"
+                },
+                "blueTeamLdapGroup": {
+                    "type": "string"
+                },
+                "whiteTeamLdapGroup": {
+                    "type": "string"
+                },
+                "campaignPhases": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CampaignPhaseDefinition"
+                    }
+                },
+                "targetGroups": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TargetGroupDefinition"
+                    }
+                },
+                "networkSegments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/NetworkSegmentDefinition"
+                    }
+                },
+                "activeTimes": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ActiveTime"
+                    }
+                },
+                "gmaId": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "gitConfiguration": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/definitions/GitCredentialsConfiguration"
+                                },
+                                {
+                                    "$ref": "#/definitions/GitSshConfiguration"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "externalId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "externalSource": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "enum": [
+                                "VLM",
+                                "OTHER"
+                            ]
+                        }
+                    ]
+                },
+                "isTargetManagementEnabled": {
+                    "type": "boolean"
+                },
+                "difficulty": {
+                    "type": "string",
+                    "enum": [
+                        "EASY",
+                        "MEDIUM",
+                        "HARD"
+                    ]
+                },
+                "image": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "imageId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "isTeamSettingsEnabled": {
+                    "type": "boolean"
+                },
+                "maxSpecialScore": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "pointsBudget": {
+                    "$ref": "#/definitions/ExercisePointsBudget"
+                },
+                "isSlotResetEnabled": {
+                    "type": "boolean"
+                },
+                "scheduledStartTime": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    ]
+                },
+                "redTeamLdapGroup": {
+                    "type": "string"
+                },
+                "gracePeriodInMinutes": {
+                    "type": "integer"
+                },
+                "expectedSituationReportsCount": {
+                    "type": "integer"
+                },
+                "attackFlagFileUnixPaths": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "attackFlagFileWinPaths": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "scoringBotUsername": {
+                    "type": "string"
+                },
+                "scoringBotPassword": {
+                    "type": "string"
+                },
+                "isTargetCheckStatusHidden": {
+                    "type": "boolean"
+                },
+                "situationReportTemplate": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "incidentReportTemplate": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "disabledIncidentTypes": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "ONLINE",
+                            "OFFLINE",
+                            "COMPROMISED",
+                            "NOT_COMPROMISED"
+                        ]
+                    }
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/definitions/CTFTaskDefinition"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFGmaValidationTaskDefinition"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFFreeFormTaskDefinition"
+                            },
+                            {
+                                "$ref": "#/definitions/CTFVersusTaskDefinition"
+                            }
+                        ]
+                    }
+                },
+                "durationPeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "taskAbandonPenalty": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "number"
+                        }
+                    ]
+                },
+                "openedTasksLimit": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "integer"
+                        }
+                    ]
+                },
+                "isIndividualAssessment": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "individualAssessmentIdlePeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "isNiceFrameworkSupported": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "missionDurationPeriod": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "taskCategories": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/CTFTaskCategory"
+                    }
+                },
+                "workRoleId": {
+                    "oneOf": [
+                        {
+                            "type": "null",
+                            "title": "Not included"
+                        },
+                        {
+                            "type": "string"
+                        }
+                    ]
+                },
+                "showTeamPosition": {
+                    "type": "boolean"
+                },
+                "showMissionBoardConsole": {
+                    "type": "boolean"
+                }
+            },
+            "title": "VERSUS",
+            "required": [
+                "type",
+                "name",
+                "numberOfTeams",
+                "blueTeamName",
+                "blueTeamLdapGroup",
+                "whiteTeamLdapGroup",
+                "campaignPhases",
+                "targetGroups",
+                "networkSegments",
+                "activeTimes",
+                "gmaId",
+                "isTargetManagementEnabled",
+                "difficulty",
+                "isTeamSettingsEnabled",
+                "pointsBudget",
+                "isSlotResetEnabled",
+                "redTeamLdapGroup",
+                "gracePeriodInMinutes",
+                "expectedSituationReportsCount",
+                "attackFlagFileUnixPaths",
+                "attackFlagFileWinPaths",
+                "scoringBotUsername",
+                "scoringBotPassword",
+                "isTargetCheckStatusHidden",
+                "disabledIncidentTypes",
+                "tasks",
+                "taskCategories",
+                "showTeamPosition",
+                "showMissionBoardConsole"
+            ]
         }
     }
 }

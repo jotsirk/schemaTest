@@ -1,0 +1,144 @@
+# # This playbook prints a simple debug message
+# - name: Deploy VM 
+#   hosts: all
+#   connection: local
+
+#   tasks:
+#   # - name: Print debug message
+#   #   debug:
+#   #     msg: "Var1 was {{var1}} and var2 was {{var2}}"
+
+
+# # Gather vcenter resource ID-s
+---
+
+- name: Get datacenter id
+  vmware.vmware_rest.vcenter_datacenter_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_username: "{{ vcenter_username }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_validate_certs: "{{ vcenter_validate_certs }}"
+    names:
+      - "{{ datacenter }}"
+  register: result
+- set_fact:
+    dc_id: "{{result.value[0].datacenter}}"
+
+- name: Get datastore Id
+  vmware.vmware_rest.vcenter_datastore_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_username: "{{ vcenter_username }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_validate_certs: "{{ vcenter_validate_certs }}"
+    names:
+      - "{{ datastore }}"
+  register: result
+- set_fact:
+    datastore_id: "{{ result.value[0].datastore  }}"
+
+
+- name: Get folder id
+  vmware.vmware_rest.vcenter_folder_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_username: "{{ vcenter_username }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_validate_certs: "{{ vcenter_validate_certs }}"
+    names:
+      - "{{ folder }}"
+    filter_type: VIRTUAL_MACHINE
+  register: result
+- set_fact:
+    folder_id: "{{ result.value[0].folder  }}"
+
+- name: Get source VM id
+  vmware.vmware_rest.vcenter_vm_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_username: "{{ vcenter_username }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_validate_certs: "{{ vcenter_validate_certs }}"
+    names:
+    - "{{ vm_template }}"
+  register: result
+- set_fact:
+    source_vm_id: "{{ result.value[0].vm  }}"
+
+
+- name: Get Resource pool id
+  vmware.vmware_rest.vcenter_resourcepool_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_username: "{{ vcenter_username }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_validate_certs: "{{ vcenter_validate_certs }}"
+    names: 
+      - "{{ resource_pool }}"
+  register: result
+- set_fact:
+    resource_pool_id: "{{ result.value[0].resource_pool  }}"
+
+# Check VM status
+
+- name: Check if vm exists
+  vmware.vmware_rest.vcenter_vm_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_username: "{{ vcenter_username }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_validate_certs: "{{ vcenter_validate_certs }}"
+    names:
+    - "{{ inventory_hostname }}"
+    resource_pools:
+    - "{{ resource_pool_id }}"
+  register: result
+  when: 
+    - deploy != true
+- set_fact:
+    vm: "{{ result.value[0].vm  }}"
+  when: 
+    - deploy != true and (result|length>0) 
+
+- name: Create a clone of a VM
+  vmware.vmware_rest.vcenter_vm:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_username: "{{ vcenter_username }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_validate_certs: "{{ vcenter_validate_certs }}"
+    placement:
+      datastore: "{{datastore_id}}"
+      folder: "{{ folder_id }}"
+      resource_pool: "{{ resource_pool_id }}"
+    source: '{{ source_vm_id }}'
+    name: "{{ inventory_hostname }}"
+    state: clone
+  register: vm
+  when: 
+    - deploy
+    - vm is not defined
+
+- name: Get id of VM-s to delete
+  vmware.vmware_rest.vcenter_vm_info:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_username: "{{ vcenter_username }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_validate_certs: "{{ vcenter_validate_certs }}"
+    names:
+    - "{{ inventory_hostname }}"
+    resource_pools:
+    - "{{ resource_pool_id }}"
+  register: result
+  when: 
+    - deploy != true
+- set_fact:
+    vm: "{{ result.value[0].vm  }}"
+  when: 
+    - deploy != true
+
+- name: Delete VMs
+  vmware.vmware_rest.vcenter_vm:
+    vcenter_hostname: "{{ vcenter_hostname }}"
+    vcenter_username: "{{ vcenter_username }}"
+    vcenter_password: "{{ vcenter_password }}"
+    vcenter_validate_certs: "{{ vcenter_validate_certs }}"
+    state: absent
+    vm: "{{ vm }}"
+  when: 
+    - deploy != true
+
